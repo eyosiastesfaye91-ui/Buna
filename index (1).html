@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Buna — Coffee, poured in three rounds</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Work+Sans:wght@400;500;600&display=swap');
+
+  :root {
+    --bg: #241610;
+    --bg-alt: #2f1d14;
+    --cream: #F3E9D8;
+    --cream-dim: rgba(243,233,216,0.6);
+    --clay-dim: rgba(193,113,47,0.2);
+    --gold: #D9A441;
+    --line: rgba(243,233,216,0.14);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--cream);
+    font-family: 'Work Sans', system-ui, sans-serif;
+  }
+
+  .display { font-family: 'Fraunces', serif; }
+
+  a { text-decoration: none; }
+
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 28px;
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 20;
+  }
+
+  .logo { display: flex; align-items: center; gap: 10px; }
+  .logo span { font-size: 22px; letter-spacing: 0.5px; }
+
+  .cart-fab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 8px 16px;
+    color: var(--cream);
+    cursor: pointer;
+    font-size: 14px;
+  }
+  .cart-fab:focus-visible, .round-btn:focus-visible, .qty-btn:focus-visible, .add-btn:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+  }
+
+  .hero {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 40px;
+    padding: 64px 28px 48px;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .hero-copy { flex: 1 1 320px; }
+  .eyebrow {
+    color: var(--gold);
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .hero h1 {
+    font-size: clamp(34px, 5vw, 52px);
+    line-height: 1.05;
+    margin: 0;
+    font-weight: 500;
+  }
+  .hero p {
+    color: var(--cream-dim);
+    font-size: 16px;
+    line-height: 1.6;
+    margin-top: 18px;
+    max-width: 440px;
+  }
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 26px;
+    color: var(--bg);
+    background: var(--gold);
+    padding: 12px 22px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .hero-art {
+    flex: 1 1 240px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-width: 240px;
+  }
+
+  .rounds {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px 28px 12px;
+  }
+  .rounds-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 22px;
+  }
+  .round-btn {
+    cursor: pointer;
+    border-radius: 12px;
+    padding: 14px 18px;
+    text-align: left;
+    border: 1px solid var(--line);
+    background: transparent;
+    color: var(--cream);
+    flex: 1 1 220px;
+    min-width: 200px;
+    font-family: inherit;
+  }
+  .round-btn.active {
+    border-color: var(--gold);
+    background: var(--clay-dim);
+  }
+  .round-btn .row { display: flex; align-items: baseline; gap: 8px; }
+  .round-btn .label { font-size: 19px; }
+  .round-btn .tag {
+    font-size: 11px;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  .round-btn .blurb {
+    font-size: 13px;
+    color: var(--cream-dim);
+    margin-top: 6px;
+    line-height: 1.4;
+  }
+
+  .menu {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 28px 80px;
+  }
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+  }
+  .item-card {
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 18px;
+    background: var(--bg-alt);
+    transition: transform 0.15s ease;
+  }
+  .item-card:hover { transform: translateY(-2px); }
+  .item-card h3 { font-size: 18px; margin: 0 0 6px; font-weight: 500; }
+  .item-card .desc { font-size: 13px; color: var(--cream-dim); min-height: 34px; line-height: 1.5; margin: 0; }
+  .item-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 12px;
+  }
+  .price { font-size: 15px; color: var(--gold); font-weight: 600; }
+
+  .add-btn {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--bg);
+    background: var(--cream);
+    border: none;
+    border-radius: 999px;
+    padding: 7px 14px;
+    cursor: pointer;
+  }
+
+  .qty-controls { display: flex; align-items: center; gap: 10px; }
+  .qty-btn {
+    width: 26px;
+    height: 26px;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--cream);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--line);
+    font-size: 15px;
+    line-height: 1;
+  }
+  .qty-btn.plus { border-color: var(--gold); color: var(--gold); }
+  .qty-val { font-size: 14px; min-width: 14px; text-align: center; }
+
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 30;
+    display: none;
+  }
+  .overlay.open { display: block; }
+
+  .drawer {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: min(360px, 92vw);
+    background: var(--bg-alt);
+    border-left: 1px solid var(--line);
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+  }
+  .drawer-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+  }
+  .drawer-head h2 { font-size: 20px; margin: 0; }
+  .close-btn { background: transparent; border: none; color: var(--cream); cursor: pointer; font-size: 20px; }
+
+  .empty-msg { color: var(--cream-dim); font-size: 14px; }
+
+  .cart-items { display: flex; flex-direction: column; gap: 14px; overflow-y: auto; flex: 1; }
+  .cart-line { display: flex; justify-content: space-between; align-items: center; }
+  .cart-line .name { font-size: 14px; margin: 0; }
+  .cart-line .sub { font-size: 12px; color: var(--cream-dim); margin: 2px 0 0; }
+
+  .cart-footer { border-top: 1px solid var(--line); margin-top: 16px; padding-top: 16px; }
+  .cart-total-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 15px;
+    margin-bottom: 14px;
+  }
+  .cart-total-row .amt { color: var(--gold); font-weight: 600; }
+
+  .place-order-btn {
+    width: 100%;
+    padding: 13px;
+    border-radius: 999px;
+    border: none;
+    background: var(--gold);
+    color: var(--bg);
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .place-order-btn:disabled {
+    background: var(--line);
+    color: var(--cream-dim);
+    cursor: not-allowed;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .item-card { transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <svg width="30" height="30" viewBox="0 0 100 100" fill="none">
+      <path d="M35 78 Q30 55 38 40 Q30 32 34 22 Q50 14 66 22 Q70 32 62 40 Q70 55 65 78 Z" stroke="#D9A441" stroke-width="2.5" fill="none"/>
+      <path d="M62 40 Q78 42 82 30" stroke="#D9A441" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <ellipse cx="50" cy="20" rx="6" ry="3" stroke="#D9A441" stroke-width="2.5" fill="none"/>
+      <path d="M35 78 Q50 84 65 78" stroke="#D9A441" stroke-width="2.5" fill="none"/>
+    </svg>
+    <span class="display">Buna</span>
+  </div>
+  <button class="cart-fab" id="cartFab" aria-label="Open cart">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+    <span id="cartCount">0</span>
+  </button>
+</header>
+
+<section class="hero">
+  <div class="hero-copy">
+    <p class="eyebrow">Addis Ababa · since the first pour</p>
+    <h1 class="display">Poured in three rounds,<br />the Ethiopian way.</h1>
+    <p>One jebena, three servings — Abol, Tona, Baraka. Each round drawn from the same grounds, each one gentler than the last.</p>
+    <a href="#menu" class="cta">See the menu
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+    </a>
+  </div>
+  <div class="hero-art">
+    <svg width="200" height="200" viewBox="0 0 100 100" fill="none">
+      <path d="M35 78 Q30 55 38 40 Q30 32 34 22 Q50 14 66 22 Q70 32 62 40 Q70 55 65 78 Z" stroke="#D9A441" stroke-width="2.5" fill="none"/>
+      <path d="M62 40 Q78 42 82 30" stroke="#D9A441" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <ellipse cx="50" cy="20" rx="6" ry="3" stroke="#D9A441" stroke-width="2.5" fill="none"/>
+      <path d="M35 78 Q50 84 65 78" stroke="#D9A441" stroke-width="2.5" fill="none"/>
+    </svg>
+  </div>
+</section>
+
+<section class="rounds" id="menu">
+  <div class="rounds-row" id="roundsRow"></div>
+</section>
+
+<section class="menu">
+  <div class="menu-grid" id="menuGrid"></div>
+</section>
+
+<div class="overlay" id="overlay">
+  <div class="drawer" onclick="event.stopPropagation()">
+    <div class="drawer-head">
+      <h2 class="display">Your order</h2>
+      <button class="close-btn" id="closeDrawer" aria-label="Close cart">&times;</button>
+    </div>
+    <div id="cartBody"></div>
+    <div class="cart-footer">
+      <div class="cart-total-row">
+        <span>Total</span>
+        <span class="amt" id="cartTotal">0 ETB</span>
+      </div>
+      <button class="place-order-btn" id="placeOrderBtn" disabled>Place order</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const ROUNDS = [
+    { id: "abol", label: "Abol", tag: "First pour", blurb: "Strongest of the three — the round that wakes the room." },
+    { id: "tona", label: "Tona", tag: "Second pour", blurb: "Softer and rounder, poured from the same grounds." },
+    { id: "baraka", label: "Baraka", tag: "Third pour", blurb: "The blessing round — gentle, sweet, meant to linger." }
+  ];
+
+  const MENU = {
+    abol: [
+      { id: "a1", name: "Buna Bunna", desc: "Traditional black coffee, jebena-brewed", price: 60 },
+      { id: "a2", name: "Doppio", desc: "Double espresso, dense crema", price: 75 },
+      { id: "a3", name: "Macchiato", desc: "Espresso marked with a whisper of foam", price: 80 }
+    ],
+    tona: [
+      { id: "t1", name: "Buna Latte", desc: "Espresso, steamed milk, cardamom dust", price: 95 },
+      { id: "t2", name: "Cappuccino", desc: "Equal thirds espresso, milk, foam", price: 90 },
+      { id: "t3", name: "Flat White", desc: "Ristretto pull, microfoam, no dusting", price: 95 }
+    ],
+    baraka: [
+      { id: "b1", name: "Spiced Jebena", desc: "Slow-poured with cinnamon and clove", price: 85 },
+      { id: "b2", name: "Honey Affogato", desc: "Vanilla gelato drowned in hot buna", price: 110 },
+      { id: "b3", name: "Ambasha Bite", desc: "Sweet spiced bread, warm, torn to share", price: 55 }
+    ]
+  };
+
+  const ALL_ITEMS = [...MENU.abol, ...MENU.tona, ...MENU.baraka];
+
+  let round = "abol";
+  let cart = {}; // id -> qty
+
+  const roundsRow = document.getElementById("roundsRow");
+  const menuGrid = document.getElementById("menuGrid");
+  const cartCountEl = document.getElementById("cartCount");
+  const overlay = document.getElementById("overlay");
+  const cartBody = document.getElementById("cartBody");
+  const cartTotalEl = document.getElementById("cartTotal");
+  const placeOrderBtn = document.getElementById("placeOrderBtn");
+
+  function renderRounds() {
+    roundsRow.innerHTML = "";
+    ROUNDS.forEach(r => {
+      const btn = document.createElement("button");
+      btn.className = "round-btn" + (round === r.id ? " active" : "");
+      btn.innerHTML = `
+        <div class="row">
+          <span class="display label">${r.label}</span>
+          <span class="tag">${r.tag}</span>
+        </div>
+        <p class="blurb">${r.blurb}</p>
+      `;
+      btn.addEventListener("click", () => { round = r.id; renderRounds(); renderMenu(); });
+      roundsRow.appendChild(btn);
+    });
+  }
+
+  function renderMenu() {
+    menuGrid.innerHTML = "";
+    MENU[round].forEach(item => {
+      const card = document.createElement("div");
+      card.className = "item-card";
+      const qty = cart[item.id] || 0;
+      card.innerHTML = `
+        <h3 class="display">${item.name}</h3>
+        <p class="desc">${item.desc}</p>
+        <div class="item-footer">
+          <span class="price">${item.price} ETB</span>
+          <div class="qty-slot"></div>
+        </div>
+      `;
+      const slot = card.querySelector(".qty-slot");
+      if (qty > 0) {
+        slot.innerHTML = `
+          <div class="qty-controls">
+            <button class="qty-btn minus" aria-label="Remove one">&minus;</button>
+            <span class="qty-val">${qty}</span>
+            <button class="qty-btn plus" aria-label="Add one">+</button>
+          </div>
+        `;
+        slot.querySelector(".minus").addEventListener("click", () => changeQty(item.id, -1));
+        slot.querySelector(".plus").addEventListener("click", () => changeQty(item.id, 1));
+      } else {
+        slot.innerHTML = `<button class="add-btn">Add</button>`;
+        slot.querySelector(".add-btn").addEventListener("click", () => changeQty(item.id, 1));
+      }
+      menuGrid.appendChild(card);
+    });
+  }
+
+  function changeQty(id, delta) {
+    cart[id] = (cart[id] || 0) + delta;
+    if (cart[id] <= 0) delete cart[id];
+    renderMenu();
+    renderCart();
+  }
+
+  function cartCount() {
+    return Object.values(cart).reduce((a, b) => a + b, 0);
+  }
+  function cartTotal() {
+    return Object.entries(cart).reduce((sum, [id, qty]) => {
+      const item = ALL_ITEMS.find(i => i.id === id);
+      return sum + (item ? item.price * qty : 0);
+    }, 0);
+  }
+
+  function renderCart() {
+    const count = cartCount();
+    cartCountEl.textContent = count;
+    cartTotalEl.textContent = cartTotal() + " ETB";
+    placeOrderBtn.disabled = count === 0;
+
+    if (count === 0) {
+      cartBody.innerHTML = `<p class="empty-msg">Nothing poured yet — add a round from the menu.</p>`;
+      return;
+    }
+    cartBody.innerHTML = "";
+    cartBody.className = "cart-items";
+    Object.entries(cart).forEach(([id, qty]) => {
+      const item = ALL_ITEMS.find(i => i.id === id);
+      if (!item) return;
+      const line = document.createElement("div");
+      line.className = "cart-line";
+      line.innerHTML = `
+        <div>
+          <p class="name">${item.name}</p>
+          <p class="sub">${qty} × ${item.price} ETB</p>
+        </div>
+        <div class="qty-controls">
+          <button class="qty-btn minus" aria-label="Remove one">&minus;</button>
+          <span class="qty-val">${qty}</span>
+          <button class="qty-btn plus" aria-label="Add one">+</button>
+        </div>
+      `;
+      line.querySelector(".minus").addEventListener("click", () => changeQty(id, -1));
+      line.querySelector(".plus").addEventListener("click", () => changeQty(id, 1));
+      cartBody.appendChild(line);
+    });
+  }
+
+  document.getElementById("cartFab").addEventListener("click", () => overlay.classList.add("open"));
+  document.getElementById("closeDrawer").addEventListener("click", () => overlay.classList.remove("open"));
+  overlay.addEventListener("click", () => overlay.classList.remove("open"));
+
+  placeOrderBtn.addEventListener("click", () => {
+    if (cartCount() === 0) return;
+    alert("Order placed — " + cartTotal() + " ETB. Thank you!");
+    cart = {};
+    renderMenu();
+    renderCart();
+    overlay.classList.remove("open");
+  });
+
+  renderRounds();
+  renderMenu();
+  renderCart();
+</script>
+
+</body>
+</html>
